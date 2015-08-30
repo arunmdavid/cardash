@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Intellicar</title>
+	<title>Cardash</title>
 	<script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="lib/canvasjs.min.js"></script>
 	<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
@@ -135,11 +135,17 @@
 		setInterval(function(){updateChart()}, updateInterval);
 	}
 	</script>
+	<style type="text/css">
+	html{margin: 0;padding: 0;}
+	body{margin: 0 auto;max-width: 960px;padding: 0;}
+	.title{font-size: 24px;text-align: center;background: #3462A5;color: #fff;margin: 0;padding: 20px;}
+	.subtitle{font-size: 18px;}
+	</style>
 </head>
 <body>
-Stats
-<div id="chartContainer" style="height: 300px; width:500px"></div>
-<div id="chartContainer2" style="height: 300px; width:500px"></div>
-<div id="chartContainer3" style="height: 300px; width:500px"></div>
+<!-- <h3 class='title'>CarDash</h3> -->
+<div id="chartContainer" style="height: 200px; width:90%;max-width:400px;float:left;margin:1%;"></div>
+<div id="chartContainer2" style="height: 200px; width:90%;max-width:400px;float:left;margin:1%;"></div>
+<div id="chartContainer3" style="height: 200px; width:90%;max-width:400px;float:left;margin:1%;"></div>
 </body>
 </html>
