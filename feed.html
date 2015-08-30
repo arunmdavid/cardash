@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Intellicar</title>
+	<script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="lib/canvasjs.min.js"></script>
+	<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+	<script type="text/javascript">
+	window.onload = function () {
+		var updateInterval=100;
+		var engine_rpm=-1,engine_load=-1,vehicle_speed=-1;
+		var myFirebaseRef = new Firebase("https://blazing-heat-9235.firebaseio.com/resp/");
+		myFirebaseRef.child("engine_rpm").on("value", function(snapshot) {
+ 			engine_rpm=parseInt(snapshot.val());
+		});
+		myFirebaseRef.child("engine_load").on("value", function(snapshot) {
+ 			engine_load=parseInt(snapshot.val());
+		});
+		myFirebaseRef.child("vehicle_speed").on("value", function(snapshot) {
+ 			vehicle_speed=parseInt(snapshot.val());
+		});
+		var updateChart = function () {
+			if(engine_rpm!=-1){
+				engine_rpm= Math.floor(Math.random() * (2000))+(0); 
+				myFirebaseRef.child("engine_rpm").set(engine_rpm);
+			}
+			if(engine_load!=-1){
+				engine_load= Math.floor(Math.random() * (95))+(5); 
+				myFirebaseRef.child("engine_load").set(engine_load);
+			}
+			if(vehicle_speed!=-1){
+				vehicle_speed= Math.floor(Math.random() * (140))+(0); 
+				myFirebaseRef.child("vehicle_speed").set(vehicle_speed);
+			}
+		};
+		updateChart(); 
+		setInterval(function(){updateChart()}, updateInterval);
+	}
+	</script>
+</head>
+<body>
+Test
+<div id="chartContainer" style="height: 300px; width:500px">
+</div>
+</body>
+</html>

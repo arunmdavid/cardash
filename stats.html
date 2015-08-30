@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Intellicar</title>
+	<script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="lib/canvasjs.min.js"></script>
+	<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+	<script type="text/javascript">
+	window.onload = function () {
+		var dps = [];
+		var xVal = 100;
+		var yVal = -1;	
+		var oldyVal = -1;
+		var updateInterval = 100;
+		var dataLength = 500;
+		var chart = new CanvasJS.Chart("chartContainer",{
+			title :{
+				text: "Engine RPM"
+			},			
+			data: [{
+				type: "line",
+				dataPoints: dps 
+			}]
+		});
+		var dps2 = [];
+		var xVal2 = 100;
+		var yVal2 = -1;	
+		var oldyVal2 = -1;
+		var updateInterval2 = 100;
+		var dataLength2 = 500;
+		var chart2 = new CanvasJS.Chart("chartContainer2",{
+			title :{
+				text: "Engine Load"
+			},			
+			data: [{
+				type: "line",
+				dataPoints: dps2 
+			}]
+		});
+		var dps3 = [];
+		var xVal3 = 100;
+		var yVal3 = -1;	
+		var oldyVal3 = -1;
+		var updateInterval3 = 100;
+		var dataLength3 = 500;
+		var chart3 = new CanvasJS.Chart("chartContainer3",{
+			title :{
+				text: "Vehicle Speed"
+			},			
+			data: [{
+				type: "line",
+				dataPoints: dps3
+			}]
+		});
+		var myFirebaseRef = new Firebase("https://blazing-heat-9235.firebaseio.com/resp/");
+		myFirebaseRef.child("engine_rpm").on("value", function(snapshot) {
+ 			yVal=parseInt(snapshot.val());
+		});
+		myFirebaseRef.child("engine_load").on("value", function(snapshot2) {
+ 			yVal2=parseInt(snapshot2.val());
+		});
+		myFirebaseRef.child("vehicle_speed").on("value", function(snapshot3) {
+ 			yVal3=parseInt(snapshot3.val());
+		});
+		var updateChart = function (count) {
+			if(yVal!=-1){//&&oldyVal!=yVal){
+				oldyVal=yVal;
+				count = count || 1;
+	 				dps.push({
+	 					x: xVal,
+	 					y: yVal
+	 				});
+	 				xVal++;
+	 			if (dps.length > dataLength)
+				{
+					dps.shift();				
+				}
+				chart.render();		
+			}else if(xVal==100){
+				for (var j = 0; j < count; j++) {	
+	 				dps.push({
+	 					x: xVal,
+	 					y: null
+	 				});
+	 				xVal++;
+	 			}
+			}
+			if(yVal2!=-1){//&&oldyVal!=yVal){
+				oldyVal2=yVal2;
+				count = count || 1;
+	 				dps2.push({
+	 					x: xVal2,
+	 					y: yVal2
+	 				});
+	 				xVal2++;
+	 			if (dps2.length > dataLength)
+				{
+					dps2.shift();				
+				}
+				chart2.render();		
+			}else if(xVal2==100){
+				for (var j = 0; j < count; j++) {	
+	 				dps2.push({
+	 					x: xVal2,
+	 					y: null
+	 				});
+	 				xVal2++;
+	 			}
+			}
+			if(yVal3!=-1){//&&oldyVal!=yVal){
+				oldyVal3=yVal3;
+				count = count || 1;
+	 				dps3.push({
+	 					x: xVal3,
+	 					y: yVal3
+	 				});
+	 				xVal3++;
+	 			if (dps3.length > dataLength)
+				{
+					dps3.shift();				
+				}
+				chart3.render();		
+			}else if(xVal3==100){
+				for (var j = 0; j < count; j++) {	
+	 				dps3.push({
+	 					x: xVal3,
+	 					y: null
+	 				});
+	 				xVal3++;
+	 			}
+			}
+
+		};
+		updateChart(dataLength); 
+		setInterval(function(){updateChart()}, updateInterval);
+	}
+	</script>
+</head>
+<body>
+Stats
+<div id="chartContainer" style="height: 300px; width:500px"></div>
+<div id="chartContainer2" style="height: 300px; width:500px"></div>
+<div id="chartContainer3" style="height: 300px; width:500px"></div>
+</body>
+</html>
