@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Intellicar</title>
+	<script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+	<script type="text/javascript" src="lib/canvasjs.min.js"></script>
+	<script src="https://cdn.firebase.com/js/client/2.2.9/firebase.js"></script>
+	<script type="text/javascript">
+	window.onload = function () {
+		var dps = [];
+		var xVal = 100;
+		var yVal = -1;	
+		var oldyVal = -1;
+		var updateInterval = 100;
+		var dataLength = 500;
+		var chart = new CanvasJS.Chart("chartContainer",{
+			title :{
+				text: "Engine RPM"
+			},			
+			data: [{
+				type: "line",
+				dataPoints: dps 
+			}]
+		});
+		var myFirebaseRef = new Firebase("https://blazing-heat-9235.firebaseio.com/logs/");
+		var myFirebaseResp = new Firebase("https://blazing-heat-9235.firebaseio.com/resp/");
+		var objArr=[];
+		myFirebaseRef.once("value", function(snapshot) {//child("engine_rpm").
+			/*index = 0;
+			myData=[]
+			var myJson = {}*/
+			snapshot.forEach(function(data) {
+				var obj=data.val();
+				console.log(JSON.stringify(obj));
+				var key=(Object.keys(obj)[0]);
+				var val=obj[key];
+				//debugger;
+				myFirebaseResp.child(key).set(val);
+				sleep(250);
+				//setTimeout(updateData(obj),1000);
+				//objArr.push(obj);
+				/*index++;
+				
+				myJson[Object.keys(obj)] = obj[Object.keys(obj)]*/
+				
+				/*if(index == 4){
+					index = 0;
+					myData.push(myJson);
+					myJson = {}
+				}*/
+				
+
+				//myFirebaseRef.child("engine_rpm").set(engine_rpm);
+				//}
+			});
+			//updateData();
+ 			//yVal=parseInt(snapshot.val());
+		});
+		var counter=0;
+		function updateData(){
+			if(counter<objArr.length){
+			//objArr.forEach(obj){
+				//for (var counter = 0; counter < objArr.length; counter++) {
+					
+			var obj=objArr[counter];//counter++;
+			console.log(JSON.stringify(obj));
+			var key=(Object.keys(obj)[0]);
+				var val=obj[key];
+				//debugger;
+				myFirebaseResp.child(key).set(val);
+				
+			//}
+			//sleep(100);
+			}else{
+				counter=0;
+			}
+			//setTimeout(updateData(),1000);
+			//updateData();
+		}
+		function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+		var updateChart = function (count) {
+			if(yVal!=-1){//&&oldyVal!=yVal){
+				oldyVal=yVal;
+				count = count || 1;
+	 				dps.push({
+	 					x: xVal,
+	 					y: yVal
+	 				});
+	 				xVal++;
+	 			if (dps.length > dataLength)
+				{
+					dps.shift();				
+				}
+				chart.render();		
+			}else if(xVal==100){
+				for (var j = 0; j < count; j++) {	
+	 				dps.push({
+	 					x: xVal,
+	 					y: null
+	 				});
+	 				xVal++;
+	 			}
+			}
+
+		};
+		//updateChart(dataLength); 
+		//setInterval(function(){updateChart()}, updateInterval);
+	}
+	</script>
+</head>
+<body>
+Stats
+<div id="chartContainer" style="height: 300px; width:500px"></div>
+<div id="chartContainer2" style="height: 300px; width:500px"></div>
+<div id="chartContainer3" style="height: 300px; width:500px"></div>
+</body>
+</html>
